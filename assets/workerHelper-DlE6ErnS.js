@@ -1,0 +1,1 @@
+import{jr as f,js as r}from"./index-Ce-shGnM.js";function n(u,e){return e.push(u.buffer),{buffer:u.buffer,layout:new f(u.layout)}}function o(u){return new r(u.layout).createView(u.buffer)}export{o as t,n as u};

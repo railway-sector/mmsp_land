@@ -1,1 +1,0 @@
-import"./index-JSX_D-TK.js";function a(r){if(r.graphic&&r.graphic.layer?.type!=="graphics")return 1;const e=r.operations?.data.type;if(!e)return 3;switch(e){case"polygon":case"point":case"polyline":case"mesh":break;default:return 3}return 0}export{a as e};
