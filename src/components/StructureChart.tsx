@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useEffect, useRef, useState, memo, use } from "react";
 import { structureLayer } from "../layers";
@@ -34,11 +35,13 @@ function maybeDisposeRoot(divId: any) {
 }
 
 ///*** Others */
+
 class MyTheme extends am5.Theme {
   patterns: am5.LinePattern[] | undefined | any;
   currentPattern: number | any | undefined;
   setupDefaultRules() {
-    // let theme: any;
+    // eslint-disable-next-line prefer-const
+    let theme = this;
 
     const gap = 4;
     const rotation = 135;
@@ -68,15 +71,13 @@ class MyTheme extends am5.Theme {
       fillOpacity: 0,
     });
 
-    // this.rule("Slice").setup = function (target: any) {
-    //   target?.set("fillPattern", theme?.patterns[theme?.currentPattern]);
-    //   theme && theme.currentPattern++;
-    //   if (theme?.currentPattern === theme?.patterns?.length) {
-    //     if (theme.currentPattern) {
-    //       theme.currentPattern = 0;
-    //     }
-    //   }
-    // };
+    this.rule("Slice").setup = function (target) {
+      target.set("fillPattern", theme.patterns[theme.currentPattern]);
+      theme.currentPattern++;
+      if (theme.currentPattern === theme.patterns?.length) {
+        theme.currentPattern = 0;
+      }
+    };
   }
 }
 
