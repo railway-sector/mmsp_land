@@ -1,0 +1,1 @@
+import{n as a,p as r,u as i}from"./index-CtePn_e0.js";const d=t=>{const s=t;let e=class extends s{get availableFields(){return this.layer.fieldsIndex.fields.map(l=>l.name)}};return a([r()],e.prototype,"layer",void 0),a([r({readOnly:!0})],e.prototype,"availableFields",null),e=a([i("esri.views.layers.OGCFeatureLayerView")],e),e};export{d as s};
