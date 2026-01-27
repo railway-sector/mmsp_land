@@ -33,7 +33,7 @@ export const statusLotColor = [
   "#ff0000", // For Expro
   "#00734c", // With WOP...
   "#55ff00", // ROWUA/TUA
-  "#0D98BA", // Signed ROWUA/TUA
+  "#32CD32", // Signed ROWUA/TUA
 ];
 
 export const statusLotQuery = statusLotLabel.map((status, index) => {
