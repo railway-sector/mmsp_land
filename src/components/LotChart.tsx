@@ -23,7 +23,6 @@ import { CalciteLabel, CalciteCheckbox } from "@esri/calcite-components-react";
 import {
   cpField,
   lotTypeField,
-  primaryLabelColor,
   station1Field,
   statusLotQuery,
 } from "../uniqueValues";
@@ -45,6 +44,7 @@ const LotChart = (backgcolorswitch: any) => {
   const arcgisMap = document.querySelector("arcgis-map") as ArcgisMap;
   const { contractp, landtype, landsection } = use(MyContext);
   const background_color_switch = backgcolorswitch.backgcolorswitch;
+  const switch_color = background_color_switch === false ? "#d1d5db" : "black";
 
   useEffect(() => {
     zoomToLayer(lotLayer, arcgisMap);
@@ -107,17 +107,6 @@ const LotChart = (backgcolorswitch: any) => {
     }
   }, [contractp, landtype, landsection]);
 
-  // Background color change
-  // useEffect(() => {
-  //   if (background_color_switch === false) {
-  //     // setBackgroundColor("#2b2b2b");
-  //     setLabelColor("#d1d5db");
-  //   } else {
-  //     // setBackgroundColor("white");
-  //     setLabelColor("black");
-  //   }
-  // }, [background_color_switch]);
-
   // Highlight Handed Over lots
   useEffect(() => {
     if (handedOverCheckBox === true) {
@@ -168,7 +157,7 @@ const LotChart = (backgcolorswitch: any) => {
     const chart = root.container.children.push(
       am5percent.PieChart.new(root, {
         layout: root.verticalLayout,
-      })
+      }),
     );
     chartRef.current = chart;
 
@@ -184,7 +173,7 @@ const LotChart = (backgcolorswitch: any) => {
         radius: am5.percent(45), // outer radius
         innerRadius: am5.percent(28),
         scale: 1.7,
-      })
+      }),
     );
     pieSeriesRef.current = pieSeries;
     chart.series.push(pieSeries);
@@ -203,7 +192,7 @@ const LotChart = (backgcolorswitch: any) => {
         populateText: true,
         oversizedBehavior: "fit",
         textAlign: "center",
-      })
+      }),
     );
 
     pieSeries.onPrivate("width", (width: any) => {
@@ -233,7 +222,7 @@ const LotChart = (backgcolorswitch: any) => {
       const selected: any = ev.target.dataItem?.dataContext;
       const categorySelected: string = selected.category;
       const find = statusLotQuery.find(
-        (emp: any) => emp.category === categorySelected
+        (emp: any) => emp.category === categorySelected,
       );
       const statusSelect = find?.value;
 
@@ -298,7 +287,7 @@ const LotChart = (backgcolorswitch: any) => {
       am5.Legend.new(root, {
         centerX: am5.percent(50),
         x: am5.percent(50),
-      })
+      }),
     );
     legendRef.current = legend;
     legend.data.setAll(pieSeries.dataItems);
@@ -324,7 +313,7 @@ const LotChart = (backgcolorswitch: any) => {
       const boxWidth = 220; //props.style.width;
       const availableSpace = Math.max(
         width - chart.height() - boxWidth,
-        boxWidth
+        boxWidth,
       );
       //const availableSpace = (boxWidth - valueLabelsWidth) * 0.7
       legend.labels.template.setAll({
@@ -388,7 +377,7 @@ const LotChart = (backgcolorswitch: any) => {
           {/* Total Lot Number */}
           <div
             style={{
-              color: backgcolorswitch === false ? primaryLabelColor : "#d1d5db",
+              color: switch_color,
               fontSize: "1.1vw",
               paddingBottom: "20px",
               paddingTop: "0.6vh",
@@ -398,8 +387,7 @@ const LotChart = (backgcolorswitch: any) => {
             TOTAL LOTS
             <div
               style={{
-                color:
-                  backgcolorswitch === false ? primaryLabelColor : "#d1d5db",
+                color: switch_color,
                 fontSize: "2rem",
                 fontWeight: "bold",
                 fontFamily: "calibri",
@@ -414,7 +402,7 @@ const LotChart = (backgcolorswitch: any) => {
           {/* Public Lot Number */}
           <div
             style={{
-              color: backgcolorswitch === false ? primaryLabelColor : "#d1d5db",
+              color: switch_color,
               fontSize: "1.1vw",
               paddingBottom: "20px",
               paddingTop: "0.6vh",
@@ -424,8 +412,7 @@ const LotChart = (backgcolorswitch: any) => {
             PUBLIC LOTS
             <div
               style={{
-                color:
-                  backgcolorswitch === false ? primaryLabelColor : "#d1d5db",
+                color: switch_color,
                 fontSize: "2rem",
                 fontWeight: "bold",
                 fontFamily: "calibri",
@@ -460,7 +447,7 @@ const LotChart = (backgcolorswitch: any) => {
       <div style={{ display: "flex" }}>
         <div
           style={{
-            color: backgcolorswitch === false ? primaryLabelColor : "#d1d5db",
+            color: switch_color,
             fontSize: "1.2rem",
             marginLeft: "13px",
             marginBottom: "13px",
@@ -480,7 +467,7 @@ const LotChart = (backgcolorswitch: any) => {
         ></CalciteCheckbox>
         <div
           style={{
-            color: backgcolorswitch === false ? primaryLabelColor : "#d1d5db",
+            color: switch_color,
           }}
         >
           View on the map
@@ -491,7 +478,7 @@ const LotChart = (backgcolorswitch: any) => {
         <b
           className="handedOverNumber"
           style={{
-            color: backgcolorswitch === false ? primaryLabelColor : "#d1d5db",
+            color: switch_color,
           }}
         >
           {handedOverNumber[0]}% (
