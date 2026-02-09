@@ -18,7 +18,7 @@ import {
 } from "../Query";
 import "@esri/calcite-components/dist/components/calcite-checkbox";
 import "@esri/calcite-components/dist/components/calcite-label";
-import { CalciteLabel, CalciteCheckbox } from "@esri/calcite-components-react";
+import { CalciteCheckbox } from "@esri/calcite-components-react";
 
 import {
   cpField,
@@ -371,67 +371,52 @@ const LotChart = (backgcolorswitch: any) => {
   });
 
   return (
-    <div>
-      <CalciteLabel>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          {/* Total Lot Number */}
-          <div
-            style={{
-              color: switch_color,
-              fontSize: "1.1vw",
-              paddingBottom: "20px",
-              paddingTop: "0.6vh",
-              margin: "auto",
-            }}
-          >
+    <>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <img
+          src="https://EijiGorilla.github.io/Symbols/Land_logo.png"
+          alt="Land Logo"
+          height={"50px"}
+          width={"50px"}
+          style={{ marginTop: "20px", marginLeft: "20px" }}
+        />
+        <dl style={{ alignItems: "center" }}>
+          <dt style={{ color: switch_color, fontSize: "1.1rem" }}>
             TOTAL LOTS
-            <div
-              style={{
-                color: switch_color,
-                fontSize: "2rem",
-                fontWeight: "bold",
-                fontFamily: "calibri",
-                marginLeft: "20%",
-                paddingTop: "2vh",
-              }}
-            >
-              {thousands_separators(lotNumber[0])}
-            </div>
-          </div>
-
-          {/* Public Lot Number */}
-          <div
+          </dt>
+          <dd
             style={{
               color: switch_color,
-              fontSize: "1.1vw",
-              paddingBottom: "20px",
-              paddingTop: "0.6vh",
+              fontSize: "1.9rem",
+              fontWeight: "bold",
+              fontFamily: "calibri",
+              lineHeight: "1.2",
               margin: "auto",
             }}
           >
+            {thousands_separators(lotNumber[1])}
+          </dd>
+        </dl>
+
+        {/* Public Lot Number */}
+        <dl style={{ alignItems: "center", marginRight: "20px" }}>
+          <dt style={{ color: switch_color, fontSize: "1.1rem" }}>
             PUBLIC LOTS
-            <div
-              style={{
-                color: switch_color,
-                fontSize: "2rem",
-                fontWeight: "bold",
-                fontFamily: "calibri",
-                paddingTop: "2vh",
-                marginLeft: "20%",
-              }}
-            >
-              {thousands_separators(lotNumber[2])}
-            </div>
-          </div>
-          <img
-            src="https://EijiGorilla.github.io/Symbols/Land_logo.png"
-            alt="Land Logo"
-            height={"45px"}
-            width={"45px"}
-            style={{ margin: "auto" }}
-          />
-        </div>
-      </CalciteLabel>
+          </dt>
+          <dd
+            style={{
+              color: switch_color,
+              fontSize: "1.9rem",
+              fontWeight: "bold",
+              fontFamily: "calibri",
+              lineHeight: "1.2",
+              margin: "auto",
+            }}
+          >
+            {thousands_separators(lotNumber[2])}
+          </dd>
+        </dl>
+      </div>
 
       {/* Lot Chart */}
       <div
@@ -443,57 +428,45 @@ const LotChart = (backgcolorswitch: any) => {
           marginBottom: "5%",
         }}
       ></div>
+
       {/* Handed-Over */}
-      <div style={{ display: "flex" }}>
-        <div
-          style={{
-            color: switch_color,
-            fontSize: "1.2rem",
-            marginLeft: "13px",
-            marginBottom: "13px",
-            marginRight: "10px",
-          }}
-        >
-          Handed-Over
-        </div>
-        <CalciteCheckbox
-          name="handover-checkbox"
-          label="VIEW"
-          style={{ width: "20px" }}
-          scale="l"
-          onCalciteCheckboxChange={() =>
-            setHandedOverCheckBox(handedOverCheckBox === false ? true : false)
-          }
-        ></CalciteCheckbox>
-        <div
-          style={{
-            color: switch_color,
-          }}
-        >
-          View on the map
-        </div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <img
+          src="https://EijiGorilla.github.io/Symbols/Handed_Over_Logo.svg"
+          alt="Land Logo"
+          height={"14%"}
+          width={"14%"}
+          style={{ marginLeft: "20px", marginTop: "20px" }}
+        />
+        <dl style={{ justifyContent: "space-between", marginRight: "40px" }}>
+          <dt style={{ color: switch_color, fontSize: "1.2rem" }}>
+            HANDED-OVER
+          </dt>
+          <dd
+            style={{
+              color: switch_color,
+              fontSize: "1.7rem",
+              fontWeight: "bold",
+              fontFamily: "calibri",
+              lineHeight: "1.2",
+              margin: "auto",
+            }}
+          >
+            {handedOverNumber[0]}% ({thousands_separators(handedOverNumber[1])})
+          </dd>
+        </dl>
       </div>
-      {/* Handed-Over/PTE */}
-      <CalciteLabel layout="inline">
-        <b
-          className="handedOverNumber"
-          style={{
-            color: switch_color,
-          }}
-        >
-          {handedOverNumber[0]}% (
-          {!handedOverNumber[1] ? 0 : thousands_separators(handedOverNumber[1])}
-          )
-          <img
-            src="https://EijiGorilla.github.io/Symbols/Handed_Over_Logo.svg"
-            alt="Land Logo"
-            height={"15%"}
-            width={"15%"}
-            style={{ marginLeft: "70%", display: "flex", marginTop: "-10%" }}
-          />
-        </b>
-      </CalciteLabel>
-    </div>
+      <CalciteCheckbox
+        name="handover-checkbox"
+        label="VIEW"
+        style={{ width: "20px", marginLeft: "20px" }}
+        scale="l"
+        onCalciteCheckboxChange={() =>
+          setHandedOverCheckBox(handedOverCheckBox === false ? true : false)
+        }
+      ></CalciteCheckbox>
+      <span style={{ color: switch_color }}>View on the map</span>
+    </>
   );
 }; // End of lotChartgs
 

@@ -11,7 +11,7 @@ import {
   generateIsfNumber,
   thousands_separators,
 } from "../Query";
-import { CalciteLabel } from "@esri/calcite-components-react";
+
 import { cpField, lotTypeField, station1Field } from "../uniqueValues";
 import { ArcgisMap } from "@arcgis/map-components/dist/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
@@ -99,7 +99,7 @@ const IsfChart = memo(() => {
     const chart = root.container.children.push(
       am5percent.PieChart.new(root, {
         layout: root.verticalLayout,
-      })
+      }),
     );
     chartRef.current = chart;
 
@@ -114,8 +114,8 @@ const IsfChart = memo(() => {
         legendValueText: "{valuePercentTotal.formatNumber('#.')}% ({value})",
         radius: am5.percent(45), // outer radius
         innerRadius: am5.percent(28),
-        scale: 2,
-      })
+        scale: 1.6,
+      }),
     );
     pieSeriesRef.current = pieSeries;
     chart.series.push(pieSeries);
@@ -130,7 +130,7 @@ const IsfChart = memo(() => {
         populateText: true,
         oversizedBehavior: "fit",
         textAlign: "center",
-      })
+      }),
     );
 
     pieSeries.onPrivate("width", (width: any) => {
@@ -211,7 +211,7 @@ const IsfChart = memo(() => {
       am5.Legend.new(root, {
         centerX: am5.percent(50),
         x: am5.percent(50),
-      })
+      }),
     );
     legendRef.current = legend;
     legend.data.setAll(pieSeries.dataItems);
@@ -237,7 +237,7 @@ const IsfChart = memo(() => {
       const boxWidth = 190; //props.style.width;
       const availableSpace = Math.max(
         width - chart.height() - boxWidth,
-        boxWidth
+        boxWidth,
       );
       //const availableSpace = (boxWidth - valueLabelsWidth) * 0.7
       legend.labels.template.setAll({
@@ -287,27 +287,42 @@ const IsfChart = memo(() => {
     legendRef.current?.data.setAll(pieSeriesRef.current.dataItems);
   });
 
+  const primaryLabelColor = "#9ca3af";
+  const valueLabelColor = "#d1d5db";
+
   return (
     <>
-      <CalciteLabel>TOTAL ISF</CalciteLabel>
-      <CalciteLabel layout="inline">
-        <b className="isfTotalNumber">
-          {thousands_separators(isfNumber)}
-
-          <img
-            src="https://EijiGorilla.github.io/Symbols/NLO_Logo.svg"
-            alt="NLO Logo"
-            height={"60%"}
-            width={"60%"}
-            style={{ marginLeft: "250%", display: "flex", marginTop: "-35%" }}
-          />
-        </b>
-      </CalciteLabel>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <img
+          src="https://EijiGorilla.github.io/Symbols/NLO_Logo.svg"
+          alt="Land Logo"
+          height={"50px"}
+          width={"50px"}
+          style={{ marginTop: "20px", marginLeft: "20px" }}
+        />
+        <dl style={{ alignItems: "center", marginRight: "30px" }}>
+          <dt style={{ color: primaryLabelColor, fontSize: "1.1rem" }}>
+            TOTAL LOTS
+          </dt>
+          <dd
+            style={{
+              color: valueLabelColor,
+              fontSize: "1.9rem",
+              fontWeight: "bold",
+              fontFamily: "calibri",
+              lineHeight: "1.2",
+              margin: "auto",
+            }}
+          >
+            {thousands_separators(isfNumber)}
+          </dd>
+        </dl>
+      </div>
 
       <div
         id={chartID}
         style={{
-          height: "45vh",
+          height: "55vh",
           backgroundColor: "rgb(0,0,0,0)",
           color: "white",
         }}

@@ -49,7 +49,19 @@ function MainChart() {
 
   return (
     <>
-      <CalciteTabs slot="panel-end" layout="center" scale="l">
+      <CalciteTabs
+        slot="panel-end"
+        layout="center"
+        scale="m"
+        style={{
+          borderStyle: "solid",
+          borderRightWidth: 5,
+          borderLeftWidth: 5,
+          borderBottomWidth: 5,
+          // borderTopWidth: 5,
+          borderColor: "#555555",
+        }}
+      >
         <CalciteTabNav
           slot="title-group"
           id="thetabs"
@@ -81,6 +93,7 @@ function MainChart() {
               bottom: "5px",
               right: "10px",
               fontSize: "12px",
+              marginBottom: "5px",
             }}
           >
             BLK BG{" "}

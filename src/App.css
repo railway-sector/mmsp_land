@@ -107,21 +107,6 @@ calcite-tabs {
   margin-inline-end: 0.75rem;
 }
 
-.esri-legend__layer-caption {
-  display: none;
-}
-
-.calcite-tutorial {
-  --calcite-color-brand: #039851;
-  --calcite-color-brand-hover: #008d52;
-}
-
-.calcite-tutorial calcite-chip {
-  --calcite-color-foreground-2: var(--calcite-color-brand);
-  --calcite-color-text-1: white;
-  margin-inline-end: 0.75rem;
-}
-
 /* Lot Tab */
 
 .totalLotsLabel {
@@ -213,6 +198,8 @@ calcite-tabs {
   border-color: rgb(0, 0, 0, 0);
   padding-top: 10px;
   margin-left: -10rem;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .dropdownFilterLayout {
@@ -229,34 +216,4 @@ calcite-tabs {
   font-size: 13px;
   margin-left: -10px;
   padding-right: 5px;
-}
-
-/* Progress Chart */
-calcite-label {
-  font-size: large;
-}
-
-.esri-legend * {
-  background-color: #2b2b2b;
-}
-
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #00032235;
-
-  /*#032235*/
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #00032235;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #00032235;
 }

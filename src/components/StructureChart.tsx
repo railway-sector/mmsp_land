@@ -14,7 +14,6 @@ import {
   thousands_separators,
 } from "../Query";
 
-import { CalciteLabel } from "@esri/calcite-components-react";
 import {
   colorStructureHex,
   cpField,
@@ -60,7 +59,7 @@ class MyTheme extends am5.Theme {
           fillOpacity: fillOpacity,
           width: width,
           height: height,
-        })
+        }),
       );
     });
 
@@ -122,7 +121,7 @@ const StructureChart = memo(() => {
     generateStructureData(contractp, landtype, landsection).then(
       (result: any) => {
         setStructureData(result);
-      }
+      },
     );
 
     // Structure Number
@@ -151,7 +150,7 @@ const StructureChart = memo(() => {
     const chart = root.container.children.push(
       am5percent.PieChart.new(root, {
         layout: root.verticalLayout,
-      })
+      }),
     );
     chartRef.current = chart;
 
@@ -166,8 +165,8 @@ const StructureChart = memo(() => {
         legendValueText: "{valuePercentTotal.formatNumber('#.')}% ({value})",
         radius: am5.percent(45), // outer radius
         innerRadius: am5.percent(28),
-        scale: 2,
-      })
+        scale: 1.7,
+      }),
     );
     pieSeriesRef.current = pieSeries;
     chart.series.push(pieSeries);
@@ -182,7 +181,7 @@ const StructureChart = memo(() => {
         populateText: true,
         oversizedBehavior: "fit",
         textAlign: "center",
-      })
+      }),
     );
 
     pieSeries.onPrivate("width", (width: any) => {
@@ -209,7 +208,7 @@ const StructureChart = memo(() => {
       const selected: any = ev.target.dataItem?.dataContext;
       const categorySelect: string = selected.category;
       const find = statusStructureQuery.find(
-        (emp: any) => emp.category === categorySelect
+        (emp: any) => emp.category === categorySelect,
       );
       const statusSelect = find?.value;
 
@@ -265,7 +264,7 @@ const StructureChart = memo(() => {
       am5.Legend.new(root, {
         centerX: am5.percent(50),
         x: am5.percent(50),
-      })
+      }),
     );
     legendRef.current = legend;
     legend.data.setAll(pieSeries.dataItems);
@@ -291,7 +290,7 @@ const StructureChart = memo(() => {
       const boxWidth = 190; //props.style.width;
       const availableSpace = Math.max(
         width - chart.height() - boxWidth,
-        boxWidth
+        boxWidth,
       );
       //const availableSpace = (boxWidth - valueLabelsWidth) * 0.7
       legend.labels.template.setAll({
@@ -341,29 +340,42 @@ const StructureChart = memo(() => {
     legendRef.current?.data.setAll(pieSeriesRef.current.dataItems);
   });
 
+  const primaryLabelColor = "#9ca3af";
+  const valueLabelColor = "#d1d5db";
+
   return (
     <>
-      {/* Total Structure Number */}
-      <CalciteLabel>TOTAL STRUCTURES</CalciteLabel>
-      <CalciteLabel layout="inline">
-        <b className="totalLotsNumber">
-          {thousands_separators(structureNumber[2])}
-          <img
-            src="https://EijiGorilla.github.io/Symbols/House_Logo.svg"
-            alt="Structure Logo"
-            height={"35%"}
-            width={"35%"}
-            style={{ marginLeft: "155%", display: "flex", marginTop: "-25%" }}
-          />
-          {/* <div className="totalLotsNumber2">({thousands_separators(structureNumber[2])})</div>{' '} */}
-        </b>
-      </CalciteLabel>
-
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <img
+          src="https://EijiGorilla.github.io/Symbols/House_Logo.svg"
+          alt="Land Logo"
+          height={"60px"}
+          width={"60px"}
+          style={{ marginTop: "10px", marginLeft: "20px" }}
+        />
+        <dl style={{ alignItems: "center", marginRight: "25px" }}>
+          <dt style={{ color: primaryLabelColor, fontSize: "1.1rem" }}>
+            TOTAL STRUCTURES
+          </dt>
+          <dd
+            style={{
+              color: valueLabelColor,
+              fontSize: "1.9rem",
+              fontWeight: "bold",
+              fontFamily: "calibri",
+              lineHeight: "1.2",
+              margin: "auto",
+            }}
+          >
+            {thousands_separators(structureNumber[2])}
+          </dd>
+        </dl>
+      </div>
       {/* Structure Chart */}
       <div
         id={chartID}
         style={{
-          height: "50vh",
+          height: "55vh",
           backgroundColor: "rgb(0,0,0,0)",
           color: "white",
           marginBottom: "10%",
@@ -371,32 +383,32 @@ const StructureChart = memo(() => {
       ></div>
 
       {/* Demolished number */}
-      <CalciteLabel>DEMOLISHED</CalciteLabel>
-      <CalciteLabel layout="inline">
-        {structureNumber[1] === 0 ? (
-          <b className="DemolishedNumber">
-            {structureNumber[0]}% (0)
-            <img
-              src="https://EijiGorilla.github.io/Symbols/Structure_Demolished.svg"
-              alt="Structure Logo"
-              height={"15%"}
-              width={"15%"}
-              style={{ marginLeft: "70%", display: "flex", marginTop: "-10%" }}
-            />
-          </b>
-        ) : (
-          <b className="DemolishedNumber">
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <img
+          src="https://EijiGorilla.github.io/Symbols/Structure_Demolished.svg"
+          alt="Land Logo"
+          height={"55px"}
+          width={"55px"}
+          style={{ marginTop: "10px", marginLeft: "20px" }}
+        />
+        <dl style={{ alignItems: "center", marginRight: "35px" }}>
+          <dt style={{ color: primaryLabelColor, fontSize: "1.1rem" }}>
+            DEMOLISHED
+          </dt>
+          <dd
+            style={{
+              color: valueLabelColor,
+              fontSize: "1.9rem",
+              fontWeight: "bold",
+              fontFamily: "calibri",
+              lineHeight: "1.2",
+              margin: "auto",
+            }}
+          >
             {structureNumber[0]}% ({thousands_separators(structureNumber[1])})
-            <img
-              src="https://EijiGorilla.github.io/Symbols/Structure_Demolished.svg"
-              alt="Structure Logo"
-              height={"18%"}
-              width={"18%"}
-              style={{ marginLeft: "70%", display: "flex", marginTop: "-10%" }}
-            />
-          </b>
-        )}
-      </CalciteLabel>
+          </dd>
+        </dl>
+      </div>
     </>
   );
 }); // End of lotChartgs

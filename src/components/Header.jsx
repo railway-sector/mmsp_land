@@ -19,12 +19,14 @@ function Header() {
         id="header-title"
         style={{
           display: "flex",
-          // width: "100%",
           height: "70px",
-          justifyContent: "center",
           padding: "0 1rem",
           borderStyle: "solid",
-          borderWidth: 1,
+          borderRightWidth: 5,
+          borderLeftWidth: 5,
+          borderBottomWidth: 4,
+          borderTopWidth: 5,
+          borderColor: "#555555",
         }}
       >
         <img

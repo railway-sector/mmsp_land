@@ -23,14 +23,14 @@ function ActionPanel() {
   useEffect(() => {
     if (activeWidget) {
       const actionActiveWidget = document.querySelector(
-        `[data-panel-id=${activeWidget}]`
+        `[data-panel-id=${activeWidget}]`,
       );
       actionActiveWidget.hidden = true;
     }
 
     if (nextWidget !== activeWidget) {
       const actionNextWidget = document.querySelector(
-        `[data-panel-id=${nextWidget}]`
+        `[data-panel-id=${nextWidget}]`,
       );
       actionNextWidget.hidden = false;
     }
@@ -45,17 +45,16 @@ function ActionPanel() {
         position="start"
         id="left-shell-panel"
         displayMode="dock"
-        style={{
-          borderStyle: "solid",
-          borderLeftWidth: 1,
-          borderBottomWidth: 1,
-          borderRightWidth: 1,
-          borderTopWidth: 0,
-        }}
       >
         <CalciteActionBar
           slot="action-bar"
-          style={{ borderStyle: "solid", borderWidth: 1 }}
+          style={{
+            borderStyle: "solid",
+            borderRightWidth: 4.5,
+            borderLeftWidth: 4.5,
+            borderBottomWidth: 4.5,
+            borderColor: "#555555",
+          }}
         >
           <CalciteAction
             data-action-id="layers"
