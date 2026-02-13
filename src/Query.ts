@@ -59,7 +59,7 @@ export async function dateUpdate() {
 export async function generateLotData(
   contractp: any,
   landtype: any,
-  landsection: any
+  landsection: any,
 ) {
   const qCP = `${cpField} = '` + contractp + "'";
   const qLandType = `${lotTypeField} = '` + landtype + "'";
@@ -176,7 +176,7 @@ export async function generateLotProgress(
   yearSelected: any,
   contractp: any,
   landtype: any,
-  landsection: any
+  landsection: any,
 ) {
   const total_count_handover = new StatisticDefinition({
     onStatisticField: handedOverDateField,
@@ -250,7 +250,7 @@ export async function generateMissingDatesHandedOver(
   yearSelected: any,
   contractp: any,
   landtype: any,
-  landsection: any
+  landsection: any,
 ) {
   const total_count_handover = new StatisticDefinition({
     onStatisticField: `CASE WHEN ${handedOverField} = 1 THEN 1 ELSE 0 END`,
@@ -298,7 +298,7 @@ export async function generateMissingDatesHandedOver(
 export async function generateStructureData(
   contractp: any,
   landtype: any,
-  landsection: any
+  landsection: any,
 ) {
   const qCP = `${cpField} = '` + contractp + "'";
   const qLandType = `${lotTypeField} = '` + landtype + "'";
@@ -414,7 +414,7 @@ export async function generateStrucNumber() {
     const totaln = stats.total_struc_N;
     const totalpie = stats.total_pie_structure;
     const percDemolished = Number(
-      ((demolished / totalnDemolished) * 100).toFixed(0)
+      ((demolished / totalnDemolished) * 100).toFixed(0),
     );
     return [percDemolished, demolished, totaln, totalpie];
   });
@@ -423,7 +423,7 @@ export async function generateStrucNumber() {
 export async function generateIsfData(
   contractp: any,
   landtype: any,
-  landsection: any
+  landsection: any,
 ) {
   const qCP = `${cpField} = '` + contractp + "'";
   const qLandType = `${lotTypeField} = '` + landtype + "'";

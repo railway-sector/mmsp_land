@@ -394,7 +394,7 @@ const LotChart = (backgcolorswitch: any) => {
               margin: "auto",
             }}
           >
-            {thousands_separators(lotNumber[1])}
+            {thousands_separators(lotNumber[0])}
           </dd>
         </dl>
 

@@ -4,6 +4,7 @@ import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
+
 import {
   SimpleMarkerSymbol,
   TextSymbol,
@@ -193,7 +194,7 @@ const lotLayerUniquValueInfos: any = statusLotLabel.map(
         color: statusLotColor[index],
       }),
     });
-  }
+  },
 );
 
 const lotLayerStatusRenderer = new UniqueValueRenderer({
@@ -479,7 +480,7 @@ const structureLayerUniquValueInfos: any = statusStructure.map(
         },
       }),
     });
-  }
+  },
 );
 
 export const structureLayerRenderer = new UniqueValueRenderer({
@@ -542,7 +543,7 @@ const structureDemolishUniqueValueInfos = statusStructureDemolish.map(
         },
       }),
     });
-  }
+  },
 );
 const structureDemolishedRenderer = new UniqueValueRenderer({
   field: "REMARKS",
