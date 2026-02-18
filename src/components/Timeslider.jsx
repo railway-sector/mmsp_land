@@ -10,17 +10,18 @@ export default function Timeslider() {
       const timeSlider = document.querySelector("arcgis-time-slider");
 
       const start = new Date(2020, 1, 1);
-      timeSlider.fullTimeExtent;
       timeSlider.fullTimeExtent = {
         start: start,
         // end: lotLayer.timeInfo.fullTimeExtent.end,
         end: new Date(2026, 12, 31),
       };
       // timeSlider.fullTimeExtent = lotLayer.timeInfo.fullTimeExtent;
-
-      // timeSlider.playRate = 1;
-      timeSlider.tops = {
-        interval: lotLayer.timeInfo.interval,
+      timeSlider.stops = {
+        // interval: lotLayer.timeInfo.interval,
+        interval: {
+          value: 1,
+          unit: "months",
+        },
       };
     });
   });
