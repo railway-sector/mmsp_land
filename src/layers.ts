@@ -227,6 +227,13 @@ export const lotLayer = new FeatureLayer({
   labelingInfo: [lotLabel],
   renderer: lotLayerStatusRenderer,
   // popupEnabled: false,
+  timeInfo: {
+    startField: "HandOverDate",
+    interval: {
+      unit: "days",
+      value: 1,
+    },
+  },
   popupTemplate: {
     title: "<p>{Id}</p>",
     lastEditInfoEnabled: false,
@@ -245,6 +252,10 @@ export const lotLayer = new FeatureLayer({
           {
             fieldName: "StatusNVS3",
             label: "<p>Status of Land Acquisition</p>",
+          },
+          {
+            fieldName: "HandOverDate",
+            label: "Handed-over date",
           },
         ],
       },

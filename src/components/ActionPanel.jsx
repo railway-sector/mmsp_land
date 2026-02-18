@@ -9,15 +9,25 @@ import {
   CalciteAction,
   CalcitePanel,
 } from "@esri/calcite-components-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import "@arcgis/map-components/components/arcgis-basemap-gallery";
 import "@arcgis/map-components/components/arcgis-layer-list";
 import "@arcgis/map-components/components/arcgis-legend";
-import { defineActions } from "../uniqueValues";
+import "@arcgis/map-components/components/arcgis-time-slider";
+import {
+  cpField,
+  defineActions,
+  lotTypeField,
+  station1Field,
+} from "../uniqueValues";
+import Timeslider from "./Timeslider";
+import { MyContext } from "../contexts/MyContext";
 
 function ActionPanel() {
+  const { contractp, landtype, landsection } = use(MyContext);
   const [activeWidget, setActiveWidget] = useState(null);
   const [nextWidget, setNextWidget] = useState(null);
+  const timeSlider = document.querySelector("arcgis-time-slider");
 
   // End of dropdown list
   useEffect(() => {
@@ -26,6 +36,7 @@ function ActionPanel() {
         `[data-panel-id=${activeWidget}]`,
       );
       actionActiveWidget.hidden = true;
+      timeSlider ? (timeSlider.timeExtent = null) : console.log("reset");
     }
 
     if (nextWidget !== activeWidget) {
@@ -73,6 +84,17 @@ function ActionPanel() {
             icon="basemap"
             text="basemaps"
             id="basemaps"
+            onClick={(event) => {
+              setNextWidget(event.target.id);
+              setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
+            }}
+          ></CalciteAction>
+
+          <CalciteAction
+            data-action-id="timeslider"
+            icon="sliders-horizontal"
+            text="Handed-Over Lots"
+            id="timeslider"
             onClick={(event) => {
               setNextWidget(event.target.id);
               setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
@@ -132,11 +154,18 @@ function ActionPanel() {
         </CalcitePanel>
 
         <CalcitePanel
+          class="timeslider"
+          height="l"
+          data-panel-id="timeslider"
+          hidden
+        ></CalcitePanel>
+
+        {/* <CalcitePanel
           class="timeSeries-panel"
           height-scale="l"
           data-panel-id="charts"
           hidden
-        ></CalcitePanel>
+        ></CalcitePanel> */}
 
         <CalcitePanel heading="Description" data-panel-id="information" hidden>
           {nextWidget === "information" ? (
@@ -160,6 +189,10 @@ function ActionPanel() {
           )}
         </CalcitePanel>
       </CalciteShellPanel>
+
+      {nextWidget === "timeslider" && nextWidget !== activeWidget && (
+        <Timeslider />
+      )}
       {/* {nextWidget === "charts" && nextWidget !== activeWidget && (
         <LotProgressChart />
       )} */}
