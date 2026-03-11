@@ -1,0 +1,1 @@
+import{jo as f,jp as t}from"./index-XsDH7010.js";function o(u,e){return e.push(u.buffer),{buffer:u.buffer,layout:new f(u.layout)}}function n(u){return new t(u.layout).createView(u.buffer)}export{n as t,o as u};

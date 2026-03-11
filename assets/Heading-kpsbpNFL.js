@@ -1,0 +1,1 @@
+import{ec as i,ed as l,ee as c,ef as o}from"./index-XsDH7010.js";function f({level:e,class:n,...t},s){const r=a(e);return i(`h${r}`,{...t,"aria-level":String(r),class:l(c.heading,n),role:"heading"},s)}function a(e){return o(Math.ceil(e),1,6)}function h(e,n=1){return a(e+n)}export{h as l,f as s};
