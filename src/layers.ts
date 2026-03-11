@@ -4,6 +4,7 @@ import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
 import UniqueValueRenderer from "@arcgis/core/renderers/UniqueValueRenderer";
 import SimpleRenderer from "@arcgis/core/renderers/SimpleRenderer";
 import GroupLayer from "@arcgis/core/layers/GroupLayer";
+import MapImageLayer from "@arcgis/core/layers/MapImageLayer";
 
 import {
   SimpleMarkerSymbol,
@@ -218,7 +219,7 @@ const lotLabel = new LabelClass({
 
 export const lotLayer = new FeatureLayer({
   portalItem: {
-    id: land_portalItem_id,
+    id: "0c172b82ddab44f2bb439542dd75e8ae",
     portal: portal_url,
   },
   layerId: 8,
@@ -227,13 +228,15 @@ export const lotLayer = new FeatureLayer({
   labelingInfo: [lotLabel],
   renderer: lotLayerStatusRenderer,
   // popupEnabled: false,
-  timeInfo: {
-    startField: "HandOverDate",
-    interval: {
-      unit: "days",
-      value: 1,
-    },
-  },
+  // timeInfo: {
+  //   startField: "HandOverDate",
+  //   interval: {
+  //     unit: "days",
+  //     value: 1,
+  //   },
+  // },
+  minScale: 50000,
+  maxScale: 0,
   popupTemplate: {
     title: "<p>{Id}</p>",
     lastEditInfoEnabled: false,
@@ -980,3 +983,31 @@ export const structuresGroupLayer = new GroupLayer({
   visibilityMode: "independent",
   layers: [structureLayer, structureDemolishedLayer],
 });
+
+// Drone image
+export const sbs_drone_image1 = new MapImageLayer({
+  portalItem: {
+    id: "c327b806413847518a6d8e3a8a680d53",
+    portal: portal_url,
+  },
+  title: "SBS_20250303",
+  legendEnabled: false,
+  minScale: 3000,
+});
+
+export const sbs_drone_image2 = new MapImageLayer({
+  portalItem: {
+    id: "de5969507ce04c3286e951069dbebd81",
+    portal: portal_url,
+  },
+  title: "SBS_20260203",
+  legendEnabled: false,
+  minScale: 3000,
+});
+
+// export const droneGroupLayer = new GroupLayer({
+//   title: "Drone Images",
+//   visible: false,
+//   visibilityMode: "independent",
+//   layers: [sbs_drone_image1, sbs_drone_image2],
+// });

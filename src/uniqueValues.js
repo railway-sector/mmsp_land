@@ -2,6 +2,11 @@ import Collection from "@arcgis/core/core/Collection";
 import ActionButton from "@arcgis/core/support/actions/ActionButton";
 const arcgisMap = document.querySelector("arcgis-map");
 
+// Status_Date Query
+export const latest_date = "2026-02-13";
+// export const initial_Status_Date = "Status_Date = date '" + latest_date + "'";
+export const initial_Status_Date = `Status_Date = date '${latest_date}'`;
+
 // Lot
 export const lot_id_field = "Id";
 export const lot_layer_title = "Acquisition Status";
@@ -148,7 +153,9 @@ export async function defineActions(event) {
   item.title === "Senate-DepEd Boundary" ||
   // item.title === 'PTE Subterranean Lots' ||
   // item.title === 'Handed-Over Lots' ||
-  item.title === "Structures"
+  item.title === "Structures" ||
+  item.title === "SBS_20250303" ||
+  item.title === "SBS_20260203"
     ? (item.visible = false)
     : (item.visible = true);
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { use, useEffect, useRef, useState } from "react";
-import { handedOverLotLayer, lotLayer, publicLotLayer } from "../layers";
+import { handedOverLotLayer, lotLayer } from "../layers";
 import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import Query from "@arcgis/core/rest/support/Query";
 import * as am5 from "@amcharts/amcharts5";
@@ -13,19 +13,14 @@ import {
   generateHandedOver,
   generateLotData,
   generateLotNumber,
+  queryLayersExpression,
   thousands_separators,
-  zoomToLayer,
 } from "../Query";
 import "@esri/calcite-components/dist/components/calcite-checkbox";
 import "@esri/calcite-components/dist/components/calcite-label";
 import { CalciteCheckbox } from "@esri/calcite-components-react";
 
-import {
-  cpField,
-  lotTypeField,
-  station1Field,
-  statusLotQuery,
-} from "../uniqueValues";
+import { statusLotQuery } from "../uniqueValues";
 import { ArcgisMap } from "@arcgis/map-components/dist/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
 
@@ -45,10 +40,6 @@ const LotChart = (backgcolorswitch: any) => {
   const { contractp, landtype, landsection } = use(MyContext);
   const background_color_switch = backgcolorswitch.backgcolorswitch;
   const switch_color = background_color_switch === false ? "#d1d5db" : "black";
-
-  useEffect(() => {
-    zoomToLayer(lotLayer, arcgisMap);
-  }, [contractp, landtype, landsection]);
 
   // 1. Land Acquisition
   const pieSeriesRef = useRef<unknown | any | undefined>({});
@@ -72,41 +63,6 @@ const LotChart = (backgcolorswitch: any) => {
   // Handed Over View checkbox
   const [handedOverCheckBox, setHandedOverCheckBox] = useState<boolean>(false);
 
-  // Background color switch
-  // const [backgroundColor, setBackgroundColor] = useState<any>("#2b2b2b");
-  // const [labelColor, setLabelColor] = useState<any>("#d1d5db");
-
-  // Query
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
-  useEffect(() => {
-    if (!contractp) {
-      lotLayer.definitionExpression = "1=1";
-      handedOverLotLayer.definitionExpression = "1=1";
-      publicLotLayer.definitionExpression = "1=1";
-      // pteLotSubteLayer1.definitionExpression = '1=1';
-    } else if (contractp && !landtype && !landsection) {
-      lotLayer.definitionExpression = qCP;
-      handedOverLotLayer.definitionExpression = qCP;
-      publicLotLayer.definitionExpression = qCP;
-      // pteLotSubteLayer1.definitionExpression = qCP;
-    } else if (contractp && landtype && !landsection) {
-      lotLayer.definitionExpression = qCpLandType;
-      handedOverLotLayer.definitionExpression = qCpLandType;
-      publicLotLayer.definitionExpression = qCpLandType;
-      // pteLotSubteLayer1.definitionExpression = qCpLandType;
-    } else {
-      lotLayer.definitionExpression = qCpLandTypeSection;
-      handedOverLotLayer.definitionExpression = qCpLandTypeSection;
-      publicLotLayer.definitionExpression = qCpLandTypeSection;
-      // pteLotSubteLayer1.definitionExpression = qCpLandTypeSection;
-    }
-  }, [contractp, landtype, landsection]);
-
   // Highlight Handed Over lots
   useEffect(() => {
     if (handedOverCheckBox === true) {
@@ -117,6 +73,8 @@ const LotChart = (backgcolorswitch: any) => {
   }, [handedOverCheckBox, contractp, landtype, landsection]);
 
   useEffect(() => {
+    queryLayersExpression(contractp, landtype, landsection, arcgisMap);
+
     generateLotData(contractp, landtype, landsection).then((result: any) => {
       setLotData(result);
     });
@@ -130,10 +88,6 @@ const LotChart = (backgcolorswitch: any) => {
       setHandedOverNumber(response);
     });
   }, [contractp, landtype, landsection]);
-
-  // useLayoutEffect runs synchronously. If this is used with React.lazy,
-  // Every time calcite action is fired, the chart is fired, too.
-  // To avoid, use useEffect instead of useLayoutEffect
 
   // 1. Pie Chart for Land Acquisition
   useEffect(() => {

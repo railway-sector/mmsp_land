@@ -16,6 +16,8 @@ import ActionPanel from "./components/ActionPanel";
 import Header from "./components/Header";
 import MainChart from "./components/MainChart";
 import { MyContext } from "./contexts/MyContext";
+import { latest_date } from "./uniqueValues";
+import FeatureLayerView from "@arcgis/core/views/layers/FeatureLayerView";
 
 function App() {
   const [loggedInState, setLoggedInState] = useState<boolean>(false);
@@ -52,6 +54,8 @@ function App() {
   const [contractp, setContractPackage] = useState<any>();
   const [landtype, setLandtype] = useState<any>();
   const [landsection, setLandsection] = useState<any>();
+  const [statusdate, setStatusdate] = useState<any>(latest_date);
+  const [timesliderstate, setTimesliderstate] = useState<FeatureLayerView>();
 
   const updateContractcps = (newContractcp: any) => {
     setContractPackage(newContractcp);
@@ -63,6 +67,14 @@ function App() {
 
   const updateLandsection = (newPtLineType: any) => {
     setLandsection(newPtLineType);
+  };
+
+  const updateStatusdate = (newStatusDate: any) => {
+    setStatusdate(newStatusDate);
+  };
+
+  const updateTimesliderstate = (newState: any) => {
+    setTimesliderstate(newState);
   };
 
   return (
@@ -77,9 +89,13 @@ function App() {
                 contractp,
                 landtype,
                 landsection,
+                statusdate,
+                timesliderstate,
                 updateContractcps,
                 updateLandtype,
                 updateLandsection,
+                updateStatusdate,
+                updateTimesliderstate,
               }}
             >
               <ActionPanel />

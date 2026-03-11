@@ -9,10 +9,9 @@ import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import {
   generateIsfData,
   generateIsfNumber,
+  queryLayersExpression,
   thousands_separators,
 } from "../Query";
-
-import { cpField, lotTypeField, station1Field } from "../uniqueValues";
 import { ArcgisMap } from "@arcgis/map-components/dist/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
 
@@ -48,34 +47,19 @@ const IsfChart = memo(() => {
 
   const chartID = "isf-pie";
 
-  // Query
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
   useEffect(() => {
-    if (!contractp) {
-      isfLayer.definitionExpression = "1=1";
-    } else if (contractp && !landtype && !landsection) {
-      isfLayer.definitionExpression = qCP;
-    } else if (contractp && landtype && !landsection) {
-      isfLayer.definitionExpression = qCpLandType;
-    } else {
-      isfLayer.definitionExpression = qCpLandTypeSection;
-    }
-  }, [contractp, landtype, landsection]);
+    queryLayersExpression(contractp, landtype, landsection, arcgisMap);
 
-  useEffect(() => {
     generateIsfData(contractp, landtype, landsection).then((result: any) => {
       SetIsfData(result);
     });
 
     // ISF
-    generateIsfNumber().then((response: any) => {
-      setIsfNumber(response);
-    });
+    generateIsfNumber(contractp, landtype, landsection).then(
+      (response: any) => {
+        setIsfNumber(response);
+      },
+    );
   }, [contractp, landtype, landsection]);
 
   useEffect(() => {

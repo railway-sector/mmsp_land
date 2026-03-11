@@ -16,14 +16,10 @@ import {
   CalciteChip,
   CalciteAvatar,
 } from "@esri/calcite-components-react";
-import {
-  cpField,
-  lotIssueListField,
-  lotTypeField,
-  station1Field,
-} from "../uniqueValues";
+import { lotIssueListField } from "../uniqueValues";
 import { ArcgisMap } from "@arcgis/map-components/dist/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
+import { queryStatisticsLayer } from "../Query";
 
 // Zoom in to selected lot from expropriation list
 let highlightSelect: any;
@@ -61,22 +57,12 @@ const LotIssueList = () => {
     // Reset the list
     const query = lotLayer.createQuery();
     const qExpro = `${lotIssueListField} IS NOT NULL`;
-    const qCP = `${cpField} = '` + contractp + "'";
-    const qLandType = `${lotTypeField} = '` + landtype + "'";
-    const qCpLandType = qCP + " AND " + qLandType;
-    const qLandSection = `${station1Field} = '` + landsection + "'";
-    const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
-    if (!contractp) {
-      query.where = qExpro;
-    } else if (contractp && !landtype && !landsection) {
-      query.where = qExpro + " AND " + qCP;
-    } else if (contractp && landtype && !landsection) {
-      query.where = qExpro + " AND " + qCpLandType;
-    } else {
-      query.where = qExpro + " AND " + qCpLandTypeSection;
-    }
-    // query.outFields = ["*"];
+    query.where = queryStatisticsLayer(
+      contractp,
+      landtype,
+      landsection,
+      qExpro,
+    );
 
     query.returnGeometry = true;
     lotLayer.queryFeatures(query).then((result: any) => {
@@ -117,8 +103,8 @@ const LotIssueList = () => {
               (ele: any, ind: any) =>
                 ind ===
                 exproItem.findIndex(
-                  (elem: any) => elem.objectid === ele.objectid
-                )
+                  (elem: any) => elem.objectid === ele.objectid,
+                ),
             )
             .map((result: any) => {
               return (

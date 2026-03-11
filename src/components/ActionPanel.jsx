@@ -17,14 +17,25 @@ import "@arcgis/map-components/components/arcgis-time-slider";
 import {
   cpField,
   defineActions,
+  latest_date,
   lotTypeField,
   station1Field,
 } from "../uniqueValues";
 import Timeslider from "./Timeslider";
 import { MyContext } from "../contexts/MyContext";
+import { handedOverLotLayer, lotLayer, publicLotLayer } from "../layers";
+import { queryDropdownTypes, queryLayersExpression } from "../Query";
+import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
+import SwipePanel from "./SwipePanel";
 
 function ActionPanel() {
-  const { contractp, landtype, landsection } = use(MyContext);
+  const {
+    contractp,
+    landtype,
+    landsection,
+    updateStatusdate,
+    timesliderstate,
+  } = use(MyContext);
   const [activeWidget, setActiveWidget] = useState(null);
   const [nextWidget, setNextWidget] = useState(null);
   const timeSlider = document.querySelector("arcgis-time-slider");
@@ -36,7 +47,12 @@ function ActionPanel() {
         `[data-panel-id=${activeWidget}]`,
       );
       actionActiveWidget.hidden = true;
-      timeSlider ? (timeSlider.timeExtent = null) : console.log("reset");
+      if (timeSlider) {
+        timeSlider.timeExtent = null;
+        timesliderstate.filter = new FeatureFilter({
+          where: undefined,
+        });
+      }
     }
 
     if (nextWidget !== activeWidget) {
@@ -95,6 +111,17 @@ function ActionPanel() {
             icon="sliders-horizontal"
             text="Handed-Over Lots"
             id="timeslider"
+            onClick={(event) => {
+              setNextWidget(event.target.id);
+              setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
+            }}
+          ></CalciteAction>
+
+          <CalciteAction
+            data-action-id="swipe"
+            icon="compare"
+            text="Swip image"
+            id="swipe"
             onClick={(event) => {
               setNextWidget(event.target.id);
               setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
@@ -160,6 +187,13 @@ function ActionPanel() {
           hidden
         ></CalcitePanel>
 
+        <CalcitePanel
+          class="swipe"
+          height="l"
+          data-panel-id="swipe"
+          hidden
+        ></CalcitePanel>
+
         {/* <CalcitePanel
           class="timeSeries-panel"
           height-scale="l"
@@ -193,9 +227,8 @@ function ActionPanel() {
       {nextWidget === "timeslider" && nextWidget !== activeWidget && (
         <Timeslider />
       )}
-      {/* {nextWidget === "charts" && nextWidget !== activeWidget && (
-        <LotProgressChart />
-      )} */}
+
+      {nextWidget === "swipe" && nextWidget !== activeWidget && <SwipePanel />}
     </>
   );
 }

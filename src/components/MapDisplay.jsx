@@ -11,6 +11,8 @@ import "@arcgis/map-components/components/arcgis-expand";
 import "@arcgis/map-components/components/arcgis-placement";
 import "@arcgis/map-components/components/arcgis-search";
 import "@arcgis/map-components/components/arcgis-compass";
+import "@arcgis/map-components/components/arcgis-swipe";
+import "@arcgis/map-components/components/arcgis-locate";
 import {
   accessRoadOptionsGroupLayer,
   alignmentLine,
@@ -24,6 +26,8 @@ import {
   stationLayer,
   structureLayer,
   structuresGroupLayer,
+  sbs_drone_image1,
+  sbs_drone_image2,
 } from "../layers";
 import "@esri/calcite-components/dist/components/calcite-button";
 
@@ -31,6 +35,7 @@ function MapDisplay() {
   const [mapView, setMapView] = useState();
   const arcgisMap = document.querySelector("arcgis-map");
   const arcgisSearch = document.querySelector("arcgis-search");
+  const arcgisSwipe = document.querySelector("arcgis-swipe");
 
   useEffect(() => {
     if (mapView) {
@@ -44,6 +49,10 @@ function MapDisplay() {
       arcgisMap.map.add(handedOverLotLayer);
       arcgisMap.map.add(alignmentLine);
       arcgisMap.map.add(accessRoadOptionsGroupLayer);
+      arcgisMap.map.addMany([sbs_drone_image1, sbs_drone_image2]);
+      arcgisSwipe?.leadingLayers?.add(sbs_drone_image1);
+      arcgisSwipe?.trailingLayers?.add(sbs_drone_image2);
+
       arcgisMap.map.ground.navigationConstraint = "none";
       arcgisMap.view.ui.components = [];
 
@@ -93,6 +102,8 @@ function MapDisplay() {
         </arcgis-placement> */}
       </arcgis-expand>
       <arcgis-zoom slot="bottom-right"></arcgis-zoom>
+      {/* <arcgis-swipe direction="horizontal" swipe-position="25"></arcgis-swipe> */}
+      <arcgis-locate slot="top-right"></arcgis-locate>
     </arcgis-map>
   );
 }

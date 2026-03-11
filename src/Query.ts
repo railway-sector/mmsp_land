@@ -1,4 +1,12 @@
-import { dateTable, isfLayer, lotLayer, structureLayer } from "./layers";
+/* eslint-disable react-hooks/rules-of-hooks */
+import {
+  dateTable,
+  handedOverLotLayer,
+  isfLayer,
+  lotLayer,
+  publicLotLayer,
+  structureLayer,
+} from "./layers";
 import StatisticDefinition from "@arcgis/core/rest/support/StatisticDefinition";
 import * as am5 from "@amcharts/amcharts5";
 import {
@@ -12,14 +20,104 @@ import {
   statusIsfField,
   cpField,
   handedOverField,
-  handedOverDateField,
-  handedOverYearField,
   station1Field,
   lotTypeField,
   lot_id_field,
   structureIdField,
   structureRemarksField,
 } from "./uniqueValues";
+
+// Query function for lotLayer
+export const queryDropdownTypes = (
+  contractcp: any,
+  landtype: any,
+  landsection: any,
+) => {
+  const qCP = `${cpField} = '` + contractcp + "'";
+  const qLandType = `${lotTypeField} = '` + landtype + "'";
+  const qCpLandType = qCP + " AND " + qLandType;
+  const qLandSection = `${station1Field} = '` + landsection + "'";
+  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
+
+  return [qCP, qCpLandType, qCpLandTypeSection];
+};
+
+export function queryLayersExpression(
+  contractcp: any,
+  landtype: any,
+  landsection: any,
+  arcgisMap: any,
+) {
+  const typeExpression = queryDropdownTypes(contractcp, landtype, landsection);
+
+  if (!contractcp) {
+    lotLayer.definitionExpression = "1=1";
+    handedOverLotLayer.definitionExpression = "1=1";
+    publicLotLayer.definitionExpression = "1=1";
+    structureLayer.definitionExpression = "1=1";
+    isfLayer.definitionExpression = "1=1";
+    // pteLotSubteLayer1.definitionExpression = '1=1';
+  } else if (contractcp && !landtype && !landsection) {
+    lotLayer.definitionExpression = typeExpression[0];
+    handedOverLotLayer.definitionExpression = typeExpression[0];
+    publicLotLayer.definitionExpression = typeExpression[0];
+    structureLayer.definitionExpression = typeExpression[0];
+    isfLayer.definitionExpression = typeExpression[0]; // pteLotSubteLayer1.definitionExpression = qCP;
+  } else if (contractcp && landtype && !landsection) {
+    lotLayer.definitionExpression = typeExpression[1];
+    handedOverLotLayer.definitionExpression = typeExpression[1];
+    publicLotLayer.definitionExpression = typeExpression[1];
+    structureLayer.definitionExpression = typeExpression[1];
+    isfLayer.definitionExpression = typeExpression[1];
+    // pteLotSubteLayer1.definitionExpression = qCpLandType;
+  } else {
+    lotLayer.definitionExpression = typeExpression[2];
+    handedOverLotLayer.definitionExpression = typeExpression[2];
+    publicLotLayer.definitionExpression = typeExpression[2];
+    structureLayer.definitionExpression = typeExpression[2];
+    isfLayer.definitionExpression = typeExpression[3];
+    // pteLotSubteLayer1.definitionExpression = qCpLandTypeSection;
+  }
+
+  zoomToLayer(lotLayer, arcgisMap);
+  zoomToLayer(structureLayer, arcgisMap);
+  zoomToLayer(isfLayer, arcgisMap);
+}
+
+export function queryStatisticsLayer(
+  contractcp: any,
+  landtype: any,
+  landsection: any,
+  queryField: any,
+) {
+  try {
+    const typeExpression = queryDropdownTypes(
+      contractcp,
+      landtype,
+      landsection,
+    );
+    let queryWhere: any;
+    if (!contractcp) {
+      queryWhere = !queryField ? "1=1" : queryField;
+    } else if (contractcp && !landtype && !landsection) {
+      queryWhere = !queryField
+        ? typeExpression[0]
+        : queryField + " AND " + typeExpression[0];
+    } else if (contractcp && landtype && !landsection) {
+      queryWhere = !queryField
+        ? typeExpression[1]
+        : queryField + " AND " + typeExpression[1];
+    } else {
+      queryWhere = !queryField
+        ? typeExpression[2]
+        : queryField + " AND " + typeExpression[2];
+    }
+
+    return queryWhere;
+  } catch (error) {
+    console.error("Error fetching data from FeatureServer:", error);
+  }
+}
 
 // Updat date
 export async function dateUpdate() {
@@ -37,6 +135,8 @@ export async function dateUpdate() {
     "November",
     "December",
   ];
+
+  // For updating date
 
   const query = dateTable.createQuery();
   query.where = "category = 'Land Acquisition'";
@@ -57,16 +157,10 @@ export async function dateUpdate() {
 
 // Lot
 export async function generateLotData(
-  contractp: any,
+  contractcp: any,
   landtype: any,
   landsection: any,
 ) {
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
   const total_count = new StatisticDefinition({
     onStatisticField: lotStatusField,
     outStatisticFieldName: "total_count",
@@ -78,16 +172,12 @@ export async function generateLotData(
   query.outStatistics = [total_count];
   query.orderByFields = [lotStatusField];
   query.groupByFieldsForStatistics = [lotStatusField];
-
-  if (!contractp) {
-    query.where = "1=1";
-  } else if (contractp && !landtype && !landsection) {
-    query.where = qCP;
-  } else if (contractp && landtype && !landsection) {
-    query.where = qCpLandType;
-  } else {
-    query.where = qCpLandTypeSection;
-  }
+  query.where = queryStatisticsLayer(
+    contractcp,
+    landtype,
+    landsection,
+    undefined,
+  );
 
   return lotLayer.queryFeatures(query).then((response: any) => {
     const stats = response.features;
@@ -135,7 +225,6 @@ export async function generateLotNumber() {
 
   const query = lotLayer.createQuery();
   query.outStatistics = [total_lot_number, total_lot_pie];
-  query.returnGeometry = true;
 
   return lotLayer.queryFeatures(query).then((response: any) => {
     const stats = response.features[0].attributes;
@@ -172,140 +261,12 @@ export async function generateHandedOver() {
   });
 }
 
-export async function generateLotProgress(
-  yearSelected: any,
-  contractp: any,
-  landtype: any,
-  landsection: any,
-) {
-  const total_count_handover = new StatisticDefinition({
-    onStatisticField: handedOverDateField,
-    outStatisticFieldName: "total_count_handover",
-    statisticType: "count",
-  });
-
-  // console.log(yearSelected, contractp, landtype, landsection);
-  // let year;
-  const years = Number(yearSelected);
-
-  const query = lotLayer.createQuery();
-  query.outStatistics = [total_count_handover];
-  const qStatus = `${handedOverDateField} IS NOT NULL`;
-  const qYear = `${handedOverYearField} = ` + years;
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qYearCp = qYear + " AND " + qCP;
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qYearCpLandType = qYear + " AND " + qCpLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-  const qYearCpLandTypeSection = qYear + " AND " + qCpLandTypeSection;
-
-  // When year is undefined,
-  if (!years && !contractp) {
-    console.log(qStatus);
-    query.where = qStatus;
-  } else if (!years && contractp && !landtype) {
-    query.where = qStatus + " AND " + qCP;
-  } else if (!years && contractp && landtype && !landsection) {
-    query.where = qStatus + " AND " + qCpLandType;
-  } else if (!years && contractp && landtype && landsection) {
-    query.where = qStatus + " AND " + qCpLandTypeSection;
-
-    // When year is defined,
-  } else if (years && !contractp) {
-    query.where = qStatus + " AND " + qYear;
-  } else if (years && contractp && !landtype && !landsection) {
-    query.where = qStatus + " AND " + qYearCp;
-  } else if (years && contractp && landtype && !landsection) {
-    query.where = qStatus + " AND " + qYearCpLandType;
-  } else if (years && contractp && landtype && landsection) {
-    query.where = qStatus + " AND " + qYearCpLandTypeSection;
-  }
-
-  query.outFields = [handedOverDateField];
-  query.orderByFields = [handedOverDateField];
-  query.groupByFieldsForStatistics = [handedOverDateField];
-
-  return lotLayer.queryFeatures(query).then((response: any) => {
-    const stats = response.features;
-    console.log(stats);
-    const data = stats.map((result: any) => {
-      const attributes = result.attributes;
-      const date = attributes.HandOverDate;
-      const count = attributes.total_count_handover;
-
-      // compile in object array
-      return Object.assign({
-        date: date,
-        value: count,
-      });
-    });
-
-    return data;
-  });
-}
-
-export async function generateMissingDatesHandedOver(
-  yearSelected: any,
-  contractp: any,
-  landtype: any,
-  landsection: any,
-) {
-  const total_count_handover = new StatisticDefinition({
-    onStatisticField: `CASE WHEN ${handedOverField} = 1 THEN 1 ELSE 0 END`,
-    outStatisticFieldName: "total_count_handover",
-    statisticType: "sum",
-  });
-
-  // let year;
-  const years = Number(yearSelected);
-
-  const query = lotLayer.createQuery();
-  query.outStatistics = [total_count_handover];
-  // eslint-disable-next-line no-useless-concat
-  const qStatus = `${handedOverDateField} IS NULL`;
-  // const qYear = 'HandedOverYear = ' + years;
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
-  // When year is undefined,
-  if (!years && !contractp) {
-    query.where = qStatus;
-  } else if (!years && contractp && !landtype) {
-    query.where = qStatus + " AND " + qCP;
-  } else if (!years && contractp && landtype && !landsection) {
-    query.where = qStatus + " AND " + qCpLandType;
-  } else if (!years && contractp && landtype && landsection) {
-    query.where = qStatus + " AND " + qCpLandTypeSection;
-
-    // When year is defined,
-  } else if (years) {
-    query.where = qStatus;
-  }
-
-  return lotLayer.queryFeatures(query).then((response: any) => {
-    const stats = response.features[0].attributes;
-    const value = stats.total_count_handover;
-    return value;
-  });
-}
-
 // Structure
 export async function generateStructureData(
-  contractp: any,
+  contractcp: any,
   landtype: any,
   landsection: any,
 ) {
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
   const total_count = new StatisticDefinition({
     onStatisticField: statusStructureField,
     outStatisticFieldName: "total_count",
@@ -317,16 +278,12 @@ export async function generateStructureData(
   query.outStatistics = [total_count];
   query.orderByFields = [statusStructureField];
   query.groupByFieldsForStatistics = [statusStructureField];
-
-  if (!contractp) {
-    query.where = "1=1";
-  } else if (contractp && !landtype && !landsection) {
-    query.where = qCP;
-  } else if (contractp && landtype && !landsection) {
-    query.where = qCpLandType;
-  } else {
-    query.where = qCpLandTypeSection;
-  }
+  query.where = queryStatisticsLayer(
+    contractcp,
+    landtype,
+    landsection,
+    undefined,
+  );
 
   return structureLayer.queryFeatures(query).then((response: any) => {
     const stats = response.features;
@@ -354,27 +311,12 @@ export async function generateStructureData(
   });
 }
 
-// export async function popupStructureData(lotid: any) {
-//   const total_count = new StatisticDefinition({
-//     onStatisticField: 'OBJECTID',
-//     outStatisticFieldName: 'total_count',
-//     statisticType: 'count',
-//   });
-//   const query = structureLayer.createQuery();
-//   // query.outFields = [lotIdStructureField];
-//   query.outStatistics = [total_count];
-//   const query_def = `${lotIdStructureField} = '` + lotid + "'";
-
-//   query.where = query_def;
-//   return structureLayer.queryFeatures(query).then((response: any) => {
-//     const stats = response.features[0].attributes;
-//     const count_structures = stats.total_count;
-//     return count_structures;
-//   });
-// }
-
 // Structure For Permit-to-Enter
-export async function generateStrucNumber() {
+export async function generateStrucNumber(
+  contractcp: any,
+  landtype: any,
+  landsection: any,
+) {
   const total_demolished_structure = new StatisticDefinition({
     onStatisticField: `CASE WHEN ${structureRemarksField} = 'Demolished' THEN 1 ELSE 0 END`,
     outStatisticFieldName: "total_demolished_structure",
@@ -407,6 +349,12 @@ export async function generateStrucNumber() {
     total_struc_N,
     total_pie_structure,
   ];
+  query.where = queryStatisticsLayer(
+    contractcp,
+    landtype,
+    landsection,
+    undefined,
+  );
   return structureLayer.queryFeatures(query).then((response: any) => {
     const stats = response.features[0].attributes;
     const demolished = stats.total_demolished_structure;
@@ -421,16 +369,10 @@ export async function generateStrucNumber() {
 }
 
 export async function generateIsfData(
-  contractp: any,
+  contractcp: any,
   landtype: any,
   landsection: any,
 ) {
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
   const total_count = new StatisticDefinition({
     onStatisticField: statusIsfField,
     outStatisticFieldName: "total_count",
@@ -442,16 +384,12 @@ export async function generateIsfData(
   query.outStatistics = [total_count];
   query.orderByFields = [statusIsfField];
   query.groupByFieldsForStatistics = [statusIsfField];
-
-  if (!contractp) {
-    query.where = "1=1";
-  } else if (contractp && !landtype && !landsection) {
-    query.where = qCP;
-  } else if (contractp && landtype && !landsection) {
-    query.where = qCpLandType;
-  } else {
-    query.where = qCpLandTypeSection;
-  }
+  query.where = queryStatisticsLayer(
+    contractcp,
+    landtype,
+    landsection,
+    undefined,
+  );
 
   return isfLayer.queryFeatures(query).then((response: any) => {
     const stats = response.features;
@@ -482,7 +420,11 @@ export async function generateIsfData(
   });
 }
 
-export async function generateIsfNumber() {
+export async function generateIsfNumber(
+  contractcp: any,
+  landtype: any,
+  landsection: any,
+) {
   const total_isf = new StatisticDefinition({
     onStatisticField: statusIsfField,
     outStatisticFieldName: "total_isf",
@@ -491,6 +433,13 @@ export async function generateIsfNumber() {
 
   const query = isfLayer.createQuery();
   query.outStatistics = [total_isf];
+  query.where = queryStatisticsLayer(
+    contractcp,
+    landtype,
+    landsection,
+    undefined,
+  );
+
   return isfLayer.queryFeatures(query).then((response: any) => {
     const stats = response.features[0].attributes;
     const totalisf = stats.total_isf;

@@ -11,16 +11,11 @@ import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
 import {
   generateStrucNumber,
   generateStructureData,
+  queryLayersExpression,
   thousands_separators,
 } from "../Query";
 
-import {
-  colorStructureHex,
-  cpField,
-  lotTypeField,
-  station1Field,
-  statusStructureQuery,
-} from "../uniqueValues";
+import { colorStructureHex, statusStructureQuery } from "../uniqueValues";
 import { ArcgisMap } from "@arcgis/map-components/dist/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
 
@@ -99,25 +94,9 @@ const StructureChart = memo(() => {
   const chartID = "structure-chart";
   const [structureNumber, setStructureNumber] = useState([]);
 
-  const qCP = `${cpField} = '` + contractp + "'";
-  const qLandType = `${lotTypeField} = '` + landtype + "'";
-  const qCpLandType = qCP + " AND " + qLandType;
-  const qLandSection = `${station1Field} = '` + landsection + "'";
-  const qCpLandTypeSection = qCpLandType + " AND " + qLandSection;
-
   useEffect(() => {
-    if (!contractp) {
-      structureLayer.definitionExpression = "1=1";
-    } else if (contractp && !landtype && !landsection) {
-      structureLayer.definitionExpression = qCP;
-    } else if (contractp && landtype && !landsection) {
-      structureLayer.definitionExpression = qCpLandType;
-    } else {
-      structureLayer.definitionExpression = qCpLandTypeSection;
-    }
-  }, [contractp, landtype, landsection]);
+    queryLayersExpression(contractp, landtype, landsection, arcgisMap);
 
-  useEffect(() => {
     generateStructureData(contractp, landtype, landsection).then(
       (result: any) => {
         setStructureData(result);
@@ -125,9 +104,11 @@ const StructureChart = memo(() => {
     );
 
     // Structure Number
-    generateStrucNumber().then((response: any) => {
-      setStructureNumber(response);
-    });
+    generateStrucNumber(contractp, landtype, landsection).then(
+      (response: any) => {
+        setStructureNumber(response);
+      },
+    );
   }, [contractp, landtype, landsection]);
 
   useEffect(() => {
