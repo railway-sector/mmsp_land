@@ -904,51 +904,6 @@ export const creekDivLayer = new FeatureLayer({
   popupEnabled: false,
 });
 
-// // Road options at Valenzuela station
-// export const accessRoadOptionsLayer1 = new FeatureLayer({
-//   portalItem: {
-//     id: "13884f85dd674e12a2128131098eaa0f",
-//     portal: portal_url,
-//   },
-//   layerId: 3,
-//   title: "Access Road Option 1",
-//   // outFields: ['*'],
-//   popupEnabled: false,
-// });
-
-// export const accessRoadOptionsLayer2 = new FeatureLayer({
-//   portalItem: {
-//     id: "13884f85dd674e12a2128131098eaa0f",
-//     portal: portal_url,
-//   },
-//   layerId: 2,
-//   title: "Access Road Option 2",
-//   // outFields: ['*'],
-//   popupEnabled: false,
-// });
-
-// export const accessRoadOptionsLayer3 = new FeatureLayer({
-//   portalItem: {
-//     id: "13884f85dd674e12a2128131098eaa0f",
-//     portal: portal_url,
-//   },
-//   layerId: 1,
-//   title: "Access Road Option 3",
-//   // outFields: ['*'],
-//   popupEnabled: false,
-// });
-
-// export const accessRoadOptionsLayer4 = new FeatureLayer({
-//   portalItem: {
-//     id: "13884f85dd674e12a2128131098eaa0f",
-//     portal: portal_url,
-//   },
-//   layerId: 0,
-//   title: "Access Road Option 4",
-//   // outFields: ['*'],
-//   popupEnabled: false,
-// });
-
 export const oas_accessRoad = new FeatureLayer({
   portalItem: {
     id: "437ae464f49544e080c9dda8f98a169d",
@@ -960,6 +915,21 @@ export const oas_accessRoad = new FeatureLayer({
   popupEnabled: false,
 });
 
+const oas_affectedStructuresLabels = new LabelClass({
+  symbol: new TextSymbol({
+    color: "black",
+    font: {
+      size: 8,
+      weight: "bold",
+    },
+    haloColor: "white",
+    haloSize: "0.5pt",
+  }),
+  // labelPlacement: 'above-center',
+  labelExpressionInfo: {
+    expression: "$feature.STRUCTURE_TAG_NO_",
+  },
+});
 export const oas_affectedStructures = new FeatureLayer({
   portalItem: {
     id: "437ae464f49544e080c9dda8f98a169d",
@@ -969,6 +939,7 @@ export const oas_affectedStructures = new FeatureLayer({
   title: "OAS Affected Structures",
   // outFields: ['*'],
   popupEnabled: false,
+  labelingInfo: [oas_affectedStructuresLabels],
 });
 
 // Group Layer
@@ -976,7 +947,7 @@ export const accessRoadOptionsGroupLayer = new GroupLayer({
   title: "Ortigas Station",
   visible: true,
   visibilityMode: "independent",
-  layers: [oas_accessRoad, oas_affectedStructures],
+  layers: [oas_affectedStructures, oas_accessRoad],
 });
 
 export const lotGroupLayer = new GroupLayer({

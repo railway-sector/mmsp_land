@@ -3,8 +3,6 @@ import { use, useEffect, useRef, useState } from "react";
 import {
   handedOverLotLayer,
   lotLayer,
-  oas_accessRoad,
-  oas_affectedStructures,
   publicLotLayer,
   tobeHandedOverLotLayer,
 } from "../layers";
@@ -130,8 +128,6 @@ const LotChart = () => {
         handedOverLotLayer,
         publicLotLayer,
         tobeHandedOverLotLayer,
-        oas_affectedStructures,
-        oas_accessRoad,
       ],
       // timesliderstate,
       // arcgisMap,

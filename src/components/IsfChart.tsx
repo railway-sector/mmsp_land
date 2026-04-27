@@ -11,7 +11,6 @@ import {
   queryExpression,
   thousands_separators,
   totalFieldCount,
-  zoomToLayer,
 } from "../Query";
 import { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
@@ -101,8 +100,6 @@ const IsfChart = memo(() => {
     }).then((result: any) => {
       setIsfNumber(result);
     });
-
-    zoomToLayer(isfLayer, arcgisMap);
   }, [contractp, landtype, landsection]);
 
   useEffect(() => {

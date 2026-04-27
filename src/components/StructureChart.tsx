@@ -13,7 +13,6 @@ import {
   queryExpression,
   thousands_separators,
   totalFieldCount,
-  zoomToLayer,
 } from "../Query";
 
 import {
@@ -180,8 +179,6 @@ const StructureChart = memo(() => {
     }).then((result: any) => {
       setStrucNumberForDemolition(result);
     });
-
-    zoomToLayer(structureLayer, arcgisMap);
   }, [contractp, landtype, landsection]);
 
   useEffect(() => {

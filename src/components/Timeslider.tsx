@@ -30,7 +30,6 @@ export default function Timeslider() {
     });
 
     const updatedDateCollect = [...dateCollect.slice(0, -1), latestasofdate];
-
     timeSlider.fullTimeExtent = {
       start: dateCollect[0],
       // end: dateCollect[dateCollect.length - 1].push(latestasofdate),
@@ -71,7 +70,6 @@ export default function Timeslider() {
                   : yyyymmdd;
 
           const new_landStatus_field = `${new_date_field}_NVS`;
-          console.log(new_landStatus_field);
           updateLotSymbology(new_landStatus_field);
           updateStatusdatefield(new_landStatus_field);
 
