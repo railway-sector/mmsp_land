@@ -966,7 +966,7 @@ export const oas_affectedStructures = new FeatureLayer({
     portal: portal_url,
   },
   layerId: 28,
-  title: "Affected Structures",
+  title: "OAS Affected Structures",
   // outFields: ['*'],
   popupEnabled: false,
 });
