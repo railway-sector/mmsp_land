@@ -1,0 +1,1 @@
+import{T as i,il as u}from"./index-B88GC6rg.js";function f(n,e){return n===e||n!=null&&e!=null&&i(n.spatialReference,e.spatialReference)&&n.x===e.x&&n.y===e.y&&n.z===e.z&&n.m===e.m}function m(n,e,l){return n===e||n!=null&&e!=null&&i(n.spatialReference,e.spatialReference)&&u(n.x,e.x,l)&&u(n.y,e.y,l)&&u(n.z??0,e.z??0,l)&&u(n.m??0,e.m??0,l)}export{f as a,m as u};
