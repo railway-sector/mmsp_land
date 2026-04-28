@@ -62,7 +62,7 @@ function ActionPanel() {
 
       // Timeslider and handedOver charts do not appear in shell-panel so
       // need to collapse shell-panel manually
-      if (nextWidget === "timeslider" || nextWidget === "handedover-charts") {
+      if (nextWidget === "timeslider") {
         shellPanel.collapsed = true;
         updateTimesliderstate(true);
       }
@@ -113,7 +113,7 @@ function ActionPanel() {
           <calcite-action
             data-action-id="timeslider"
             icon="sliders-horizontal"
-            text="Handed-Over Lots"
+            text="Land Status Change"
             id="timeslider"
             onClick={(event: any) => {
               setNextWidget(event.target.id);
@@ -160,11 +160,7 @@ function ActionPanel() {
           <arcgis-basemap-gallery referenceElement="arcgis-map"></arcgis-basemap-gallery>
         </calcite-panel>
 
-        <calcite-panel
-          height="l"
-          data-panel-id="timeslider"
-          hidden
-        ></calcite-panel>
+        <calcite-panel data-panel-id="timeslider" hidden></calcite-panel>
 
         {/* <CalcitePanel
           class="timeSeries-panel"
