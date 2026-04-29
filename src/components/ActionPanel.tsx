@@ -67,6 +67,9 @@ function ActionPanel() {
         updateTimesliderstate(true);
       }
     }
+
+    console.log("activeWidget: ", activeWidget);
+    console.log("nextWidget: ", nextWidget);
   });
 
   return (
@@ -192,9 +195,9 @@ function ActionPanel() {
         </calcite-panel>
       </calcite-shell-panel>
 
-      {nextWidget === "timeslider" && nextWidget !== activeWidget && (
-        <Timeslider />
-      )}
+      {nextWidget === "timeslider" &&
+        !activeWidget &&
+        nextWidget !== activeWidget && <Timeslider />}
     </>
   );
 }

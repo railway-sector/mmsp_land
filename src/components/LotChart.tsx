@@ -4,6 +4,7 @@ import {
   handedOverLotLayer,
   lotLayer,
   publicLotLayer,
+  subterraenanLots18_layer,
   tobeHandedOverLotLayer,
 } from "../layers";
 import * as am5 from "@amcharts/amcharts5";
@@ -128,6 +129,7 @@ const LotChart = () => {
         handedOverLotLayer,
         publicLotLayer,
         tobeHandedOverLotLayer,
+        subterraenanLots18_layer,
       ],
       // timesliderstate,
       // arcgisMap,

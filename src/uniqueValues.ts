@@ -135,7 +135,8 @@ export async function defineActions(event: any) {
   item.title === "To be Handed Over (to JV)" ||
   item.title === "Structures" ||
   item.title === "SBS_20250303" ||
-  item.title === "SBS_20260203"
+  item.title === "SBS_20260203" ||
+  item.title === "Subterranean Lots"
     ? (item.visible = false)
     : (item.visible = true);
 }

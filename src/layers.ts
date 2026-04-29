@@ -273,6 +273,75 @@ export const lotLayer = new FeatureLayer({
   },
 });
 
+/* Subteranean Lots with tunnel deeper than 18m */
+const subterraenanLots18Renderer = new UniqueValueRenderer({
+  valueExpression:
+    "When($feature.Tunnel_Depth > 18, 'deepSubte', 'shallowSubte')",
+  uniqueValueInfos: [
+    {
+      value: "deepSubte",
+      label: "Tunnel Depth (>18m)",
+      symbol: new SimpleFillSymbol({
+        color: "#7CFC00",
+        style: "backward-diagonal",
+        outline: {
+          color: "#7CFC00",
+          width: 1,
+        },
+      }),
+    },
+    // {
+    //   value: "shallowSubte",
+    //   label: "Subterranean Lots (<=18m)",
+    //   symbol: new SimpleFillSymbol({
+    //     color: undefined,
+    //   }),
+    // },
+  ],
+});
+
+export const subterraenanLots18_layer = new FeatureLayer({
+  portalItem: {
+    id: "0c172b82ddab44f2bb439542dd75e8ae",
+    portal: portal_url,
+  },
+  layerId: 8,
+  outFields: [lot_id_field, lotStatusField],
+  title: "Subterranean Lots",
+  definitionExpression: "Type = 'Subterranean' AND Tunnel_Depth > 18",
+  labelingInfo: [lotLabel],
+  renderer: subterraenanLots18Renderer,
+  minScale: 50000,
+  maxScale: 0,
+  popupTemplate: {
+    title: "<p>{Id}</p>",
+    lastEditInfoEnabled: false,
+    returnGeometry: true,
+    content: [
+      {
+        type: "fields",
+        fieldInfos: [
+          {
+            fieldName: "OWNER",
+            label: "Land Owner",
+          },
+          {
+            fieldName: "Station1",
+          },
+          {
+            fieldName: "StatusNVS3",
+            label: "<p>Status of Land Acquisition</p>",
+          },
+          {
+            fieldName: "Tunnel_Depth",
+            label: "Tunnel Depth (m)",
+          },
+        ],
+      },
+    ],
+  },
+});
+
 /* Public Land */
 const publicLotRenderer = new UniqueValueRenderer({
   valueExpression: "When($feature.StatusNVS3 > 0, 'withStatus', 'publicLands')",
@@ -959,6 +1028,7 @@ export const lotGroupLayer = new GroupLayer({
     lotLayer,
     handedOverLotLayer,
     tobeHandedOverLotLayer,
+    subterraenanLots18_layer,
   ],
 });
 
