@@ -1,4 +1,5 @@
 export type statisticsType = "count" | "sum";
+export type TypeFieldType = "number" | "string";
 
 // Value and Label color
 // Chart and chart label color

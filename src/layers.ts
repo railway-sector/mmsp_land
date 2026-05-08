@@ -27,7 +27,55 @@ import {
   lotStatusField,
   handedOverField,
   tobeHandedOverField,
+  cpField,
+  lotTypeField,
+  station1Field,
 } from "./uniqueValues";
+import QueryExpressionLayers from "query-layers-expression";
+
+export const queryc = new QueryExpressionLayers(
+  [undefined, undefined, undefined],
+  [cpField, lotTypeField, station1Field],
+  undefined,
+  undefined,
+  "string",
+  0,
+  undefined,
+  undefined,
+);
+
+export const querycExpro = new QueryExpressionLayers(
+  [undefined, undefined, undefined],
+  [cpField, lotTypeField, station1Field],
+  undefined,
+  undefined,
+  "string",
+  0,
+  undefined,
+  undefined,
+);
+
+export const querycIssue = new QueryExpressionLayers(
+  [undefined, undefined, undefined],
+  [cpField, lotTypeField, station1Field],
+  undefined,
+  undefined,
+  "string",
+  0,
+  undefined,
+  undefined,
+);
+
+export const querycRenderer = new QueryExpressionLayers(
+  [undefined, undefined, undefined],
+  [cpField, lotTypeField, station1Field],
+  undefined,
+  undefined,
+  "string",
+  0,
+  undefined,
+  undefined,
+);
 
 /* Standalone table for Dates */
 export const dateTable = new FeatureLayer({
@@ -973,42 +1021,49 @@ export const creekDivLayer = new FeatureLayer({
   popupEnabled: false,
 });
 
-export const oas_accessRoad = new FeatureLayer({
+// Road options at Valenzuela station
+export const accessRoadOptionsLayer1 = new FeatureLayer({
   portalItem: {
-    id: "437ae464f49544e080c9dda8f98a169d",
+    id: "13884f85dd674e12a2128131098eaa0f",
     portal: portal_url,
   },
-  layerId: 29,
-  title: "OAS Access Road",
+  layerId: 3,
+  title: "Access Road Option 1",
   // outFields: ['*'],
   popupEnabled: false,
 });
 
-const oas_affectedStructuresLabels = new LabelClass({
-  symbol: new TextSymbol({
-    color: "black",
-    font: {
-      size: 8,
-      weight: "bold",
-    },
-    haloColor: "white",
-    haloSize: "0.5pt",
-  }),
-  // labelPlacement: 'above-center',
-  labelExpressionInfo: {
-    expression: "$feature.STRUCTURE_TAG_NO_",
-  },
-});
-export const oas_affectedStructures = new FeatureLayer({
+export const accessRoadOptionsLayer2 = new FeatureLayer({
   portalItem: {
-    id: "437ae464f49544e080c9dda8f98a169d",
+    id: "13884f85dd674e12a2128131098eaa0f",
     portal: portal_url,
   },
-  layerId: 28,
-  title: "OAS Affected Structures",
+  layerId: 2,
+  title: "Access Road Option 2",
   // outFields: ['*'],
   popupEnabled: false,
-  labelingInfo: [oas_affectedStructuresLabels],
+});
+
+export const accessRoadOptionsLayer3 = new FeatureLayer({
+  portalItem: {
+    id: "13884f85dd674e12a2128131098eaa0f",
+    portal: portal_url,
+  },
+  layerId: 1,
+  title: "Access Road Option 3",
+  // outFields: ['*'],
+  popupEnabled: false,
+});
+
+export const accessRoadOptionsLayer4 = new FeatureLayer({
+  portalItem: {
+    id: "13884f85dd674e12a2128131098eaa0f",
+    portal: portal_url,
+  },
+  layerId: 0,
+  title: "Access Road Option 4",
+  // outFields: ['*'],
+  popupEnabled: false,
 });
 
 // Group Layer
@@ -1016,7 +1071,12 @@ export const accessRoadOptionsGroupLayer = new GroupLayer({
   title: "Ortigas Station",
   visible: true,
   visibilityMode: "independent",
-  layers: [oas_affectedStructures, oas_accessRoad],
+  layers: [
+    accessRoadOptionsLayer4,
+    accessRoadOptionsLayer3,
+    accessRoadOptionsLayer2,
+    accessRoadOptionsLayer1,
+  ],
 });
 
 export const lotGroupLayer = new GroupLayer({

@@ -67,9 +67,6 @@ function ActionPanel() {
         updateTimesliderstate(true);
       }
     }
-
-    console.log("activeWidget: ", activeWidget);
-    console.log("nextWidget: ", nextWidget);
   });
 
   return (

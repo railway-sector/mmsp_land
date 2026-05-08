@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { use, useEffect, useState } from "react";
-import { lotLayer } from "../layers";
+import { lotLayer, querycExpro } from "../layers";
 import Query from "@arcgis/core/rest/support/Query";
 import "@esri/calcite-components/components/calcite-shell";
 import "@esri/calcite-components/components/calcite-list";
@@ -12,7 +12,6 @@ import "@esri/calcite-components/components/calcite-action-bar";
 import { lotStatusField } from "../uniqueValues";
 import { ArcgisMap } from "@arcgis/map-components/dist/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
-import { queryExpression } from "../Query";
 
 // Zoom in to selected lot from expropriation list
 let highlightSelect: any;
@@ -47,13 +46,9 @@ const ExpropriationList = () => {
   useEffect(() => {
     // Reset the list
     const query = lotLayer.createQuery();
-    const qExpro = `${lotStatusField} = 5`;
-    query.where = queryExpression({
-      contractcp: contractp,
-      landtype: landtype,
-      landsection: landsection,
-      queryField: qExpro,
-    });
+    querycExpro.qValues = [contractp, landtype, landsection];
+    querycExpro.qExpression = `${lotStatusField} = 5`;
+    query.where = querycExpro.queryExpression();
 
     query.returnGeometry = true;
     lotLayer.queryFeatures(query).then((result: any) => {

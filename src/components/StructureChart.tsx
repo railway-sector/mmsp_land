@@ -1,23 +1,19 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useEffect, useRef, useState, memo, use } from "react";
-import { structureLayer } from "../layers";
+import { queryc, structureLayer } from "../layers";
 import * as am5 from "@amcharts/amcharts5";
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import am5themes_Responsive from "@amcharts/amcharts5/themes/Responsive";
-import {
-  chartRenderer,
-  pieChartStatusData,
-  queryDefinitionExpression,
-  queryExpression,
-  thousands_separators,
-  totalFieldCount,
-} from "../Query";
+import { thousands_separators } from "../Query";
 
 import {
   colorStructureHex,
+  cpField,
+  lotTypeField,
   primaryLabelColor,
+  station1Field,
   statusStructure,
   statusStructureField,
   statusStructureQuery,
@@ -27,6 +23,9 @@ import {
 } from "../uniqueValues";
 import { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
 import { MyContext } from "../contexts/MyContext";
+import { queryDefinitionExpression } from "../QueryExpression";
+import { chartRenderer } from "../ChartRenderer";
+import { pieChartStatusData, totalFieldCount } from "../ChartGenerator";
 
 // Dispose function
 function maybeDisposeRoot(divId: any) {
@@ -122,20 +121,15 @@ const StructureChart = memo(() => {
   const chartID = "structure-chart";
 
   useEffect(() => {
+    queryc.qValues = [contractp, landtype, landsection];
     queryDefinitionExpression({
-      queryExpression: queryExpression({
-        contractcp: contractp,
-        landtype: landtype,
-        landsection: landsection,
-      }),
+      queryExpression: queryc.queryExpression(),
       featureLayer: [structureLayer],
     });
 
     //--- chart data
     pieChartStatusData({
-      contractcp: contractp,
-      landtype: landtype,
-      landsection: landsection,
+      qChart: queryc.queryExpression(),
       layer: structureLayer,
       statusList: statusStructure,
       statusColor: colorStructureHex,
@@ -147,9 +141,7 @@ const StructureChart = memo(() => {
 
     //--- total number of structure
     totalFieldCount({
-      contractcp: contractp,
-      landtype: landtype,
-      landsection: landsection,
+      qChart: queryc.queryExpression(),
       layer: structureLayer,
       idField: structureIdField,
     }).then((result: any) => {
@@ -158,9 +150,7 @@ const StructureChart = memo(() => {
 
     //--- numbe of demolished structures
     totalFieldCount({
-      contractcp: contractp,
-      landtype: landtype,
-      landsection: landsection,
+      qChart: queryc.queryExpression(),
       layer: structureLayer,
       idField: structureRemarksField,
       queryField: `${structureRemarksField} = 'Demolished'`,
@@ -170,9 +160,7 @@ const StructureChart = memo(() => {
 
     //--- number of structures subject to demolition
     totalFieldCount({
-      contractcp: contractp,
-      landtype: landtype,
-      landsection: landsection,
+      qChart: queryc.queryExpression(),
       layer: structureLayer,
       idField: structureRemarksField,
       queryField: `${structureRemarksField} IS NOT NULL`,
@@ -241,9 +229,12 @@ const StructureChart = memo(() => {
       pieSeries: pieSeries,
       legend: legend,
       root: root,
-      contractcp: contractp,
-      landtype: landtype,
-      landsection: landsection,
+      q1Value: contractp,
+      q1Field: cpField,
+      q2Value: landtype,
+      q2Field: lotTypeField,
+      q3Value: landsection,
+      q3Field: station1Field,
       status_field: statusStructureField,
       arcgisMap: arcgisMap,
       updateChartPanelwidth: updateChartPanelwidth,
