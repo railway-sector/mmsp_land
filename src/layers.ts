@@ -1021,49 +1021,79 @@ export const creekDivLayer = new FeatureLayer({
   popupEnabled: false,
 });
 
-// Road options at Valenzuela station
-export const accessRoadOptionsLayer1 = new FeatureLayer({
+export const oas_accessRoad = new FeatureLayer({
   portalItem: {
-    id: "13884f85dd674e12a2128131098eaa0f",
+    id: "437ae464f49544e080c9dda8f98a169d",
     portal: portal_url,
   },
-  layerId: 3,
-  title: "Access Road Option 1",
+  layerId: 29,
+  title: "OAS Access Road",
   // outFields: ['*'],
   popupEnabled: false,
 });
 
-export const accessRoadOptionsLayer2 = new FeatureLayer({
-  portalItem: {
-    id: "13884f85dd674e12a2128131098eaa0f",
-    portal: portal_url,
-  },
-  layerId: 2,
-  title: "Access Road Option 2",
-  // outFields: ['*'],
-  popupEnabled: false,
+// OAS affected structure
+const oas_affecctedStructure_Renderer = new UniqueValueRenderer({
+  field: "REMARKS",
+  uniqueValueInfos: [
+    {
+      value: "Areas not yet Handed Over",
+      label: "Areas not yet Handed Over",
+      symbol: new SimpleFillSymbol({
+        style: "solid",
+        color: "white",
+        // outline: {
+        //   style: "long-dash",
+        //   width: 1,
+        //   color: "white",
+        // },
+      }),
+    },
+    {
+      value: "Handed Over Areas",
+      label: "Handed Over Areas",
+      symbol: new SimpleFillSymbol({
+        style: "solid",
+        color: "#FFE5B4",
+      }),
+    },
+    {
+      value: "Demolished",
+      label: "Demolished",
+      symbol: new SimpleFillSymbol({
+        style: "solid",
+        color: "gray",
+      }),
+    },
+  ],
 });
 
-export const accessRoadOptionsLayer3 = new FeatureLayer({
-  portalItem: {
-    id: "13884f85dd674e12a2128131098eaa0f",
-    portal: portal_url,
+const oas_affectedStructuresLabels = new LabelClass({
+  symbol: new TextSymbol({
+    color: "black",
+    font: {
+      size: 8,
+      weight: "bold",
+    },
+    haloColor: "white",
+    haloSize: "0.5pt",
+  }),
+  // labelPlacement: 'above-center',
+  labelExpressionInfo: {
+    expression: "$feature.STRUCTURE_TAG_NO_",
   },
-  layerId: 1,
-  title: "Access Road Option 3",
-  // outFields: ['*'],
-  popupEnabled: false,
 });
-
-export const accessRoadOptionsLayer4 = new FeatureLayer({
+export const oas_affectedStructures = new FeatureLayer({
   portalItem: {
-    id: "13884f85dd674e12a2128131098eaa0f",
+    id: "437ae464f49544e080c9dda8f98a169d",
     portal: portal_url,
   },
-  layerId: 0,
-  title: "Access Road Option 4",
+  layerId: 28,
+  title: "OAS Affected Structures",
   // outFields: ['*'],
+  renderer: oas_affecctedStructure_Renderer,
   popupEnabled: false,
+  labelingInfo: [oas_affectedStructuresLabels],
 });
 
 // Group Layer
@@ -1071,12 +1101,7 @@ export const accessRoadOptionsGroupLayer = new GroupLayer({
   title: "Ortigas Station",
   visible: true,
   visibilityMode: "independent",
-  layers: [
-    accessRoadOptionsLayer4,
-    accessRoadOptionsLayer3,
-    accessRoadOptionsLayer2,
-    accessRoadOptionsLayer1,
-  ],
+  layers: [oas_affectedStructures, oas_accessRoad],
 });
 
 export const lotGroupLayer = new GroupLayer({
